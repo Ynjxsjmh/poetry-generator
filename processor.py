@@ -82,7 +82,7 @@ class Tokenizer:
         :param tokens: 待编码字符串
         :return: 编号序列
         """
-        tokens = ['[SRT]'] + tokens + ['[END]']
+        tokens = ['[SRT]',] + list(tokens) + ['[END]',]
 
         return [self.token_to_id(token) for token in tokens]
 
