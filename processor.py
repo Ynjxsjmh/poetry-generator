@@ -86,7 +86,6 @@ class Tokenizer:
 
         return [self.token_to_id(token) for token in tokens]
 
-
     def decode(self, token_ids):
         """
         给定一个编号序列，将它解码成字符串
