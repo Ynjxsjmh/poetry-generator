@@ -68,7 +68,7 @@ class Tokenizer:
         self.token2id = token2id
         self.id2token = {id: token for token, id in self.token2id.items()}
 
-        self.tokens_num = len(self.token2id)
+        self.token_num = len(self.token2id)
 
     def id_to_token(self, token_id):
         return self.id2token[token_id]
