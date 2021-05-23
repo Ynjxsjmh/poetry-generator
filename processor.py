@@ -46,7 +46,7 @@ class PoetryProcessor:
                 for word, count in words_count.items()
                 if count > int(self.filters['MIN_WORD_FREQUENCY'])}
 
-    def convert_poetries_to_tokens(self, poetries=None):
+    def convert_poetries_to_token2id(self, poetries=None):
         poetries = poetries if poetries else self.poetries
         poetries = self.filter_by_poetry(poetries)
 
@@ -58,11 +58,6 @@ class PoetryProcessor:
 
         tokens = [word for word, _ in word_count_tuple]
         tokens = ['[PAD]', '[UNK]', '[SRT]', '[END]'] + tokens
-
-        return tokens
-
-    def convert_poetries_to_token2id(self, poetries=None):
-        tokens = self.convert_poetries_to_tokens(poetries)
 
         return dict(zip(tokens, range(len(tokens))))
 
