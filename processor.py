@@ -8,7 +8,7 @@ class PoetryDataset:
     def __init__(self):
         pass
 
-    def get_tang(self):
+    def get_tang_poetries(self):
         poetries = []
         filenames = glob.glob('./data/*tang*.json')
 
@@ -107,7 +107,7 @@ class Tokenizer:
 
 if __name__ == "__main__":
     poetryDataset = PoetryDataset()
-    tang_potries = poetryDataset.get_tang()
+    tang_potries = poetryDataset.get_tang_poetries()
 
     print(len(tang_potries))
 
