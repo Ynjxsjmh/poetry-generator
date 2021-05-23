@@ -62,6 +62,45 @@ class PoetryProcessor:
         return dict(zip(tokens, range(len(tokens))))
 
 
+class Tokenizer:
+
+    def __init__(self, token2id):
+        self.token2id = token2id
+        self.id2token = {id: token for token, id in self.token2id.items()}
+
+        self.tokens_num = len(self.token2id)
+
+    def id_to_token(self, token_id):
+        return self.id2token[token_id]
+
+    def token_to_id(self, token):
+        return self.token2id.get(token, self.token2id['[UNK]'])
+
+    def encode(self, tokens):
+        """
+        给定一个字符串s，在头尾分别加上标记开始和结束的特殊字符，并将它转成对应的编号序列
+        :param tokens: 待编码字符串
+        :return: 编号序列
+        """
+        tokens = ['[CLS]'] + tokens + ['[SEP]']
+
+        return [self.token_to_id(token) for token in tokens]
+
+
+    def decode(self, token_ids):
+        """
+        给定一个编号序列，将它解码成字符串
+        :param token_ids: 待解码的编号序列
+        :return: 解码出的字符串
+        """
+        special_tokens = {'[CLS]', '[SEP]'}
+
+        tokens = [self.id_to_token(token_id) for token_id in token_ids]
+        tokens = [token for token in tokens if token not in special_tokens]
+
+        return ''.join(tokens)
+
+
 if __name__ == "__main__":
     poetryDataset = PoetryDataset()
     tang_potries = poetryDataset.get_tang()
