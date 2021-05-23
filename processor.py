@@ -57,7 +57,7 @@ class PoetryProcessor:
                                   key=lambda x: -x[1])
 
         tokens = [word for word, _ in word_count_tuple]
-        tokens = ['[PAD]', '[UNK]', '[CLS]', '[SEP]'] + tokens
+        tokens = ['[PAD]', '[UNK]', '[SRT]', '[END]'] + tokens
 
         return dict(zip(tokens, range(len(tokens))))
 
@@ -82,7 +82,7 @@ class Tokenizer:
         :param tokens: 待编码字符串
         :return: 编号序列
         """
-        tokens = ['[CLS]'] + tokens + ['[SEP]']
+        tokens = ['[SRT]'] + tokens + ['[END]']
 
         return [self.token_to_id(token) for token in tokens]
 
@@ -93,7 +93,7 @@ class Tokenizer:
         :param token_ids: 待解码的编号序列
         :return: 解码出的字符串
         """
-        special_tokens = {'[CLS]', '[SEP]'}
+        special_tokens = {'[SRT]', '[END]'}
 
         tokens = [self.id_to_token(token_id) for token_id in token_ids]
         tokens = [token for token in tokens if token not in special_tokens]
