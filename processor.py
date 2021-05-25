@@ -102,11 +102,11 @@ class Tokenizer:
 
 if __name__ == "__main__":
     poetryDataset = PoetryDataset()
-    tang_potries = poetryDataset.get_tang_poetries()
+    tang_poetries = poetryDataset.get_tang_poetries()
 
-    print(len(tang_potries))
+    print(len(tang_poetries))
 
-    poetryProcessor = PoetryProcessor(tang_potries)
+    poetryProcessor = PoetryProcessor(tang_poetries)
     token2id = poetryProcessor.convert_poetries_to_token2id()
 
     print(token2id)
