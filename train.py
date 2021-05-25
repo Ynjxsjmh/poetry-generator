@@ -40,7 +40,7 @@ class PoetryDataGenerator:
             batch_data = self.pad_token_ids_list(batch_data, self.tokenizer.token_to_id('[PAD]'))
 
             yield batch_data[:, 1:], tf.one_hot(batch_data[:, 1:] + [self.tokenizer.token_to_id('[END]'),], self.tokenizer.token_num)
-            #yield batch_data[:, :-1], tf.one_hot(batch_data[:, 1:], self.tokenizer.token_num)
+            del batch_data
 
     def for_fit(self):
         """
