@@ -1,10 +1,15 @@
 import numpy as np
 
+from processor import SPECIAL_TOKEN
+
 
 class PoetryUtil:
     def __init__(self, model, tokenizer):
         self.model = model
         self.tokenizer = tokenizer
+
+        # 除了 END 之外的特殊字符数量
+        self.ignored_token_num = len(SPECIAL_TOKEN) - 1
 
     def predict(self, token_ids):
         """
@@ -13,7 +18,7 @@ class PoetryUtil:
         """
 
         # 预测各个词的概率分布，不包含 [PAD][NONE][START]
-        probs = self.model.predict([token_ids, ])[0, -1, 3:]
+        probs = self.model.predict([token_ids, ])[0, -1, self.ignored_token_num:]
         probs = np.squeeze(probs)
 
         # 先按概率升序排序，取后 100，然后降序
@@ -25,7 +30,7 @@ class PoetryUtil:
 
         # 按概率抽取一个
         # 前面预测时删除了前几个标记符，因此编号要补上3位，才是实际在tokenizer词典中的编号
-        return np.random.choice(p_idxes, p=p) + 3
+        return np.random.choice(p_idxes, p=p) + self.ignored_token_num
 
     def generate_random_poetry(self, text=""):
         """
@@ -42,7 +47,7 @@ class PoetryUtil:
             token_ids.append(target)
 
             # 到达END
-            if target == self.tokenizer.token_to_id('[END]'):
+            if target == self.tokenizer.token_to_id(SPECIAL_TOKEN['END']):
                 break
 
         return "".join(self.tokenizer.decode(token_ids))
@@ -70,7 +75,7 @@ class PoetryUtil:
                 pid = self.predict(token_ids)
 
                 # 只有不是特殊字符时，才保存到poetry里面去
-                if pid > 3:
+                if pid > self.ignored_token_num:
                     # 保存结果到token_ids中，下一次预测还要用
                     token_ids.append(pid)
 

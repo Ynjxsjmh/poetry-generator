@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow as tf
 
 from utils import PoetryUtil
-from processor import PoetryDataset, PoetryProcessor, Tokenizer
+from processor import PoetryDataset, PoetryProcessor, Tokenizer, SPECIAL_TOKEN
 
 
 class PoetryDataGenerator:
@@ -18,7 +18,7 @@ class PoetryDataGenerator:
         self.shuffle = shuffle
 
     def pad_token_ids_list(self, token_ids_list, padding=None):
-        padding = padding if padding else self.tokenizer.token_to_id('[PAD]')
+        padding = padding if padding else self.tokenizer.token_to_id(SPECIAL_TOKEN['PAD'])
 
         max_len = max(map(len, token_ids_list))
 
@@ -38,9 +38,9 @@ class PoetryDataGenerator:
             end = min(start+self.batch_size, total)
 
             batch_data = [self.tokenizer.encode(poetry) for poetry in self.poetries[start:end]]
-            batch_data = self.pad_token_ids_list(batch_data, self.tokenizer.token_to_id('[PAD]'))
+            batch_data = self.pad_token_ids_list(batch_data, self.tokenizer.token_to_id(SPECIAL_TOKEN['PAD']))
 
-            end = self.tokenizer.token_to_id('[END]')
+            end = self.tokenizer.token_to_id(SPECIAL_TOKEN['END'])
             batch_label = [np.append(data, end) for data in batch_data[:, 1:]]
             yield batch_data, tf.one_hot(batch_label, self.tokenizer.token_num)
 

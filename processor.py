@@ -20,6 +20,14 @@ class PoetryDataset:
         return poetries
 
 
+SPECIAL_TOKEN = {
+    'SRT': '[SRT]',
+    'END': '[END]',
+    'UNK': '[UNK]',
+    'PAD': '[PAD]'
+}
+
+
 class PoetryProcessor:
     def __init__(self, poetries):
         self.poetries = poetries
@@ -57,7 +65,8 @@ class PoetryProcessor:
                                   key=lambda x: -x[1])
 
         tokens = [word for word, _ in word_count_tuple]
-        tokens = ['[PAD]', '[UNK]', '[SRT]', '[END]'] + tokens
+        tokens = [SPECIAL_TOKEN['PAD'], SPECIAL_TOKEN['UNK'],
+                  SPECIAL_TOKEN['SRT'], SPECIAL_TOKEN['END']] + tokens
 
         return dict(zip(tokens, range(len(tokens))))
 
@@ -74,7 +83,7 @@ class Tokenizer:
         return self.id2token[token_id]
 
     def token_to_id(self, token):
-        return self.token2id.get(token, self.token2id['[UNK]'])
+        return self.token2id.get(token, self.token2id[SPECIAL_TOKEN['UNK']])
 
     def encode(self, tokens):
         """
@@ -82,7 +91,7 @@ class Tokenizer:
         :param tokens: 待编码字符串
         :return: 编号序列
         """
-        tokens = ['[SRT]',] + list(tokens) + ['[END]',]
+        tokens = [SPECIAL_TOKEN['SRT'],] + list(tokens) + [SPECIAL_TOKEN['END'],]
 
         return [self.token_to_id(token) for token in tokens]
 
@@ -92,7 +101,7 @@ class Tokenizer:
         :param token_ids: 待解码的编号序列
         :return: 解码出的字符串
         """
-        special_tokens = {'[SRT]', '[END]'}
+        special_tokens = {SPECIAL_TOKEN['SRT'], SPECIAL_TOKEN['END']}
 
         tokens = [self.id_to_token(token_id) for token_id in token_ids]
         tokens = [token for token in tokens if token not in special_tokens]
