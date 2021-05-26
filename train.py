@@ -87,9 +87,6 @@ class PoetryModel:
             epochs=10,
         )
 
-    def predict(self):
-        pass
-
 
 if __name__ == "__main__":
     poetryDataset = PoetryDataset()
