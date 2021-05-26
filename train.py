@@ -39,7 +39,10 @@ class PoetryDataGenerator:
             batch_data = [self.tokenizer.encode(poetry) for poetry in self.poetries[start:end]]
             batch_data = self.pad_token_ids_list(batch_data, self.tokenizer.token_to_id('[PAD]'))
 
-            yield batch_data[:, 1:], tf.one_hot(batch_data[:, 1:] + [self.tokenizer.token_to_id('[END]'),], self.tokenizer.token_num)
+            end = self.tokenizer.token_to_id('[END]')
+            batch_label = [np.append(data, end) for data in batch_data[:, 1:]]
+            yield batch_data, tf.one_hot(batch_label, self.tokenizer.token_num)
+
             del batch_data
 
     def for_fit(self):
