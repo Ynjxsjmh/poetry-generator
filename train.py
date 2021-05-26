@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
+from utils import PoetryUtil
 from processor import PoetryDataset, PoetryProcessor, Tokenizer
 
 
@@ -55,6 +56,30 @@ class PoetryDataGenerator:
             yield from self.__iter__()
 
 
+class SaveAndShowCallback(tf.keras.callbacks.Callback):
+    """
+    在每个epoch训练完成后，保留最优权重，并随机生成settings.SHOW_NUM首古诗展示
+    """
+
+    def __init__(self, tokenizer):
+        super().__init__()
+        # 给loss赋一个较大的初始值
+        self.lowest = 1e10
+        self.tokenizer = tokenizer
+
+    def on_epoch_end(self, epoch, logs=None):
+        # 在每个epoch训练完成后调用
+        # 如果当前loss更低，就保存当前模型参数
+        if logs['loss'] <= self.lowest:
+            self.lowest = logs['loss']
+            self.model.save('./model/best_model.h5')
+
+        poetryUtil = PoetryUtil(self.model, self.tokenizer)
+        # 随机生成几首古体诗测试，查看训练效果
+        for i in range(5):
+            print(poetryUtil.generate_random_poetry())
+
+
 class PoetryModel:
     def __init__(self, poetries, tokenizer):
         self.poetries = poetries
@@ -84,10 +109,13 @@ class PoetryModel:
     def train(self):
         training_generator = PoetryDataGenerator(self.poetries, self.tokenizer)
 
+        callback = SaveAndShowCallback(self.tokenizer)
+
         self.model.fit(
             training_generator.for_fit(),
             steps_per_epoch=training_generator.steps,
             epochs=10,
+            callbacks=[callback]
         )
 
 
