@@ -1,7 +1,6 @@
 import tensorflow as tf
 
-from utils import PoetryUtil
-from processor import PoetryDataset, PoetryProcessor, Tokenizer
+from processor import PoetryDataset, PoetryProcessor, PoetryUtil, Tokenizer
 
 
 if __name__ == "__main__":

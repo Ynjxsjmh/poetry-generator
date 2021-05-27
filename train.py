@@ -1,8 +1,7 @@
 import tensorflow as tf
 
-from utils import PoetryUtil
 from generator import PoetryDataGenerator
-from processor import PoetryDataset, PoetryProcessor, Tokenizer
+from processor import PoetryDataset, PoetryProcessor, PoetryUtil, Tokenizer
 
 
 class SaveAndShowCallback(tf.keras.callbacks.Callback):
